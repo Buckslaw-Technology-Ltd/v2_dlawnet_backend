@@ -1,0 +1,102 @@
+version: '3'
+
+networks:
+  laravel:
+
+services:
+  site:
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    container_name: dlaw_net_nginx
+    ports:
+      - "8013:80"
+    volumes:
+      - ./src:/var/www/html:delegated
+    depends_on:
+      - php
+      - db
+    networks:
+      - laravel
+
+  db:
+    image: postgres:13
+    container_name: dlaw_net_db
+    ports:
+      - "3012:5432"
+    environment:
+      POSTGRES_USER: dlaw
+      POSTGRES_PASSWORD: topsecret
+      POSTGRES_DB: dlawdb
+      SERVICE_TAGS: dev
+      SERVICE_NAME: db
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - laravel
+  #  mysql:
+  #    image: mysql:5.7
+  #    container_name: ease-send_mysql
+  #    #    restart: unless-stopped
+  #    #    tty: true
+  #    ports:
+  #      - "3010:3306"
+  #    environment:
+  #      MYSQL_DATABASE: ease-send
+  #      MYSQL_USER: ease-send
+  #      MYSQL_PASSWORD: password
+  #      MYSQL_ROOT_PASSWORD: password
+  #      SERVICE_TAGS: dev
+  #      SERVICE_NAME: mysql
+  #    networks:
+  #      - laravel
+
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: dlaw_net_php
+    volumes:
+      - ./src:/var/www/html:delegated
+    ports:
+      - "9011:9000"
+    networks:
+      - laravel
+
+  composer:
+    build:
+      context: .
+      dockerfile: composer.dockerfile
+    container_name: dlaw_net_composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - php
+    user: laravel
+    networks:
+      - laravel
+    entrypoint: [ 'composer' ]
+
+  #  npm:
+  #      image: node:12.18.4
+  #      container_name: izero_npm
+  #      volumes:
+  #        - ./src:/var/www/html
+  #      working_dir: /var/www/html
+  #      entrypoint: ['npm']
+
+  artisan:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: dlaw_net_artisan
+    volumes:
+      - ./src:/var/www/html:delegated
+    depends_on:
+      - db
+    working_dir: /var/www/html
+    user: laravel
+    entrypoint: [ 'php', '/var/www/html/artisan' ]
+    networks:
+      - laravel

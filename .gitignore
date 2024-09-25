@@ -1,0 +1,11 @@
+/node_modules
+/public/hot
+/public/storage
+/vendor
+/.idea
+/.vscode
+.env
+
+/public/js/app.js
+/public/css/app.css
+/composer.lock
