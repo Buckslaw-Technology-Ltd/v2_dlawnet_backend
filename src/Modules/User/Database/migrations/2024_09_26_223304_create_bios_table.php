@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('bios', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('country');
-            $table->string('state');
+            $table->integer('country_id');
+            $table->integer('state_id');
             $table->string('address');
             $table->string('institution');
             $table->enum('institution_type', ['University', 'Law School']);

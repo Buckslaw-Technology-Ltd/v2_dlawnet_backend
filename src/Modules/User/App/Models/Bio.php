@@ -5,7 +5,6 @@ namespace Modules\User\App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\User\Database\factories\BioFactory;
 
 class Bio extends Model
 {
@@ -16,8 +15,4 @@ class Bio extends Model
      */
     protected $fillable = [];
 
-    protected static function newFactory(): BioFactory
-    {
-        //return BioFactory::new();
-    }
 }
