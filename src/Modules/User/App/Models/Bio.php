@@ -13,6 +13,6 @@ class Bio extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $guarded = ['id'];
 
 }
