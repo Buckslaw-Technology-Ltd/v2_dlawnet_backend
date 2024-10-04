@@ -3,65 +3,27 @@
 namespace Modules\Core\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Modules\Core\App\Services\CountryService;
+use Modules\Core\App\Traits\ResponseTrait;
 
 class CoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use ResponseTrait;
+
+    protected CountryService $countryService;
+
+    public function __construct(CountryService $service)
     {
-        return view('core::index');
+        $this->countryService = $service;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getCountries()
     {
-        return view('core::create');
+        return $this->countryService->getCountries();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    public function getStates($id)
     {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('core::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('core::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->countryService->getStates($id);
     }
 }
