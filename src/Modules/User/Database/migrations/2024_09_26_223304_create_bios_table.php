@@ -24,14 +24,6 @@ return new class extends Migration {
             $table->string('profile_photo_path')->nullable();
             $table->string('cover_photo_path')->nullable();
             $table->date('date_of_call')->nullable();
-            $table->boolean('san')->nullable()->default(false);
-            $table->longText('summary')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->string('twitter')->nullable();
-            $table->string('instagram')->nullable();
-            $table->string('firm_position')->nullable();
-            $table->boolean('verification_passed')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

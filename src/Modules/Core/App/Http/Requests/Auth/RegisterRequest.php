@@ -29,14 +29,6 @@ class RegisterRequest extends BaseRequest
             'profile_photo_path' => 'nullable|string|max:255',
             'cover_photo_path' => 'nullable|string|max:255',
             'date_of_call' => 'nullable|date',
-            'san' => 'nullable|boolean',
-            'summary' => 'nullable|string',
-            'facebook' => 'nullable|string|url',
-            'linkedin' => 'nullable|string|url',
-            'twitter' => 'nullable|string|url',
-            'instagram' => 'nullable|string|url',
-            'firm_position' => 'nullable|string|max:255',
-            'verification_passed' => 'nullable|boolean',
         ];
     }
 
