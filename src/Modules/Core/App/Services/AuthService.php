@@ -50,7 +50,6 @@ class AuthService
             $user = $this->userInterface->findTheFirstOne('email', $emailOrUsername, ['roles']) ??
                 $this->userInterface->findTheFirstOne('username', $emailOrUsername, ['roles']);
             // Check if user is found and password is correct
-            return $user->password;
             if (!$user || !Hash::check($password, $user->password)) {
                 throw new \Exception("Invalid login details");
             }
