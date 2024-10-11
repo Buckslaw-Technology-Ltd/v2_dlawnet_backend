@@ -77,6 +77,9 @@ class AuthController extends Controller
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function suspendAccount($user_id): \Illuminate\Http\JsonResponse
     {
 
@@ -86,7 +89,7 @@ class AuthController extends Controller
         }
         return $this->successResponse('Account has been suspended');
     }
-
+ 
     public function createPasswordReset(PasswordResetRequest $request): \Illuminate\Http\JsonResponse
     {
         try {
