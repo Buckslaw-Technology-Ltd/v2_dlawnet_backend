@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->string('status')->default(TransactionStatusEnum::PENDING);
             $table->string('service_type')->default(ServiceTypeEnum::WALLET_TOP_UP);
             $table->float('amount', [10], [4]);
+            $table->string('proof_of_payment')->nullable();
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

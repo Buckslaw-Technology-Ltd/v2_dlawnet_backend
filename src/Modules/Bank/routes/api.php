@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +13,12 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('bank', fn (Request $request) => $request->user())->name('bank');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/activate', 'BankController@activateAccount')->name('activate-account');
+    Route::get('/transactions/pending', 'BankController@getAllPendingTransactions')->name('get-all-pending-transactions');
+    Route::get('/transactions/completed', 'BankController@getAllCompletedTransactions')->name('get-all-completed-transactions');
+    Route::get('/transactions', 'BankController@getAllTransactions')->name('get-all-transactions');
+    Route::get('/transactions/verify/{id}', 'BankController@verifyTransaction')->name('verify-transactions');
+    Route::get('/transactions/get-reciept/{reference_number}', 'BankController@getReciept')->name('get-receipt');
+    Route::post('/transactions/upload-proof', 'BankController@uploadProofPayment')->name('upload-proof');
 });

@@ -19,6 +19,7 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      */
     protected $guarded = ['id'];
+    protected $with = ['bio'];
     protected $hidden = [
         'password',
         'remember_token',
