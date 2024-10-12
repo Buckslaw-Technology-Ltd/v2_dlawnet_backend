@@ -15,4 +15,8 @@ class Bio extends Model
      */
     protected $guarded = ['id'];
 
+    public function User()
+    {
+        return $this->belongsTo(Bio::class);
+    }
 }
