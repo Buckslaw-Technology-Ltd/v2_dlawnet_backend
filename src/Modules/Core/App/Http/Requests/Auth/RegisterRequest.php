@@ -10,7 +10,6 @@ class RegisterRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'salute' => 'required|in:Mr,Miss,Mrs',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'gender' => 'required|boolean',
@@ -35,7 +34,6 @@ class RegisterRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            'salute.required' => 'Salutation is required.',
             'first_name.required' => 'First name is required.',
             'last_name.required' => 'Last name is required.',
             'gender.required' => 'Gender is required.',

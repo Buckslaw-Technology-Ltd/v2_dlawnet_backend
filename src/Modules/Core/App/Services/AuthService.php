@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Modules\Core\App\Events\AccountActivatedEvent;
+use Modules\Core\App\Events\InitiateAccountRegisterEvent;
+use Modules\Core\App\Events\PasswordResetEvent;
 use Modules\User\App\Interfaces\BioRepositoryInterface;
 use Modules\User\App\Interfaces\UserRepositoryInterface;
 use Modules\User\Database\Enums\TokenTypeEnum;
@@ -14,8 +17,8 @@ use Modules\User\Database\Enums\UserStatusEnum;
 class AuthService
 {
     const TOKEN_EXPIRATION_HOURS = 24;
-    protected $userInterface;
-    protected $bioInterface;
+    protected UserRepositoryInterface $userInterface;
+    protected BioRepositoryInterface $bioInterface;
 
     public function __construct(UserRepositoryInterface $userInterface, BioRepositoryInterface $bioRepository)
     {
@@ -31,19 +34,40 @@ class AuthService
             $this->bioInterface->create([...$data, 'user_id' => $user->id]);
             DB::commit();
             $this->userInterface->assignRole($user, 'user');
-            // $this->createActivation($user);
+            $this->createActivation($user);
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             //reportException($e);
             return $e;
         }
     }
 
+    public function createActivation($user, $type = TokenTypeEnum::EMAIL_VERIFICATION): void
+    {
+
+        $code = $this->generateCode();
+        DB::table("operation_tokens")->insert([
+            'user_id' => $user->id,
+            'token' => $code,
+            'type' => $type,
+        ]);
+        if ($type !== TokenTypeEnum::EMAIL_VERIFICATION) {
+            event(new PasswordResetEvent($user->email, $code));
+        } else {
+            event(new InitiateAccountRegisterEvent($user->email, $code, $user->first_name, $user->last_name));
+        }
+    }
+
+    public function generateCode(): string
+    {
+        return mt_rand(100000, 999999);
+    }
+
     /**
      * @throws Exception
      */
-    public function login($emailOrUsername, $password, $remember_me = false): mixed
+    public function login($emailOrUsername, $password): mixed
     {
         try {
             // Attempt to find the user by email or username
@@ -51,7 +75,7 @@ class AuthService
                 $this->userInterface->findTheFirstOne('username', $emailOrUsername, ['roles']);
             // Check if user is found and password is correct
             if (!$user || !Hash::check($password, $user->password)) {
-                throw new \Exception("Invalid login details");
+                throw new Exception("Invalid login details");
             }
             //TODO: Check if the user has verified their email
             /* if (!$this->checkActivation($user)) {
@@ -62,7 +86,7 @@ class AuthService
             // Create and return the authentication token
             return $this->createAuthToken($user);
 
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             //TODO: Log the exception and return a generic error message
             //reportException($exception);
             throw $exception;
@@ -107,27 +131,6 @@ class AuthService
             return false;
         }
         return true;
-    }
-
-    public function createActivation($user, $type = TokenTypeEnum::EMAIL_VERIFICATION): void
-    {
-
-        $code = $this->generateCode();
-        DB::table("operation_tokens")->insert([
-            'user_id' => $user->id,
-            'token' => $code,
-            'type' => $type,
-        ]);
-        if ($type !== TokenTypeEnum::EMAIL_VERIFICATION) {
-            //TODO: event(new PasswordResetEvent($user->email, $code));
-        } else {
-            //TODO:  event(new InitiateAccountRegisterEvent($user->email, $code, $user->first_name, $user->last_name));
-        }
-    }
-
-    public function generateCode(): string
-    {
-        return mt_rand(100000, 999999);
     }
 
     public function getCurrentUser()
@@ -186,7 +189,7 @@ class AuthService
                     // Find the user's email to trigger the AccountActivatedEvent
                     $user = $this->userInterface->find('id', $codeModel->user_id, ['email']);
                     if ($user) {
-                        //TODO:  event(new AccountActivatedEvent($user[0]['email']));
+                        event(new AccountActivatedEvent($user[0]['email']));
                     }
                     return true;
                 } else {
@@ -201,7 +204,7 @@ class AuthService
                 // Token not found or already completed
                 throw new Exception('Invalid Token');
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Log and rethrow system exceptions
             //TODO: reportException($exception);
             return false;
