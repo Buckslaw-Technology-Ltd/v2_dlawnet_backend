@@ -1,14 +1,15 @@
 <?php
 
-namespace Modules\User\App\Models;
+namespace Modules\Bank\App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Bank\Database\factories\WalletFactory;
+use Modules\User\App\Models\User;
 
-class Bio extends Model
+class Wallet extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +18,6 @@ class Bio extends Model
 
     public function User()
     {
-        return $this->belongsTo(Bio::class);
+        return $this->belongsTo(User::class);
     }
 }

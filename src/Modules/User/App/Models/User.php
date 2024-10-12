@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Bank\App\Models\Wallet;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -18,6 +19,7 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      */
     protected $guarded = ['id'];
+    protected $with = ['bio'];
     protected $hidden = [
         'password',
         'remember_token',
@@ -35,5 +37,10 @@ class User extends Authenticatable
     public function last_login(): void
     {
         $this->last_login = Carbon::now();
+    }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'user_id');
     }
 }
