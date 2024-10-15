@@ -1,4 +1,4 @@
-<?php
+z<?php
 
 namespace Modules\Bank\Database\Enums;
 
