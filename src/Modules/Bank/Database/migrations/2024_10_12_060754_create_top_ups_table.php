@@ -14,8 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->string('amount');
+            $table->float('amount');
+            $table->longText('description')-> nullable();
             $table->enum('status', ['active', 'paused'])->default('active');
+            $table->enum('account_type', ['all', 'university','law_school'])->default('all');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

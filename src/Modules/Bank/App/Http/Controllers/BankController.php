@@ -10,7 +10,8 @@ use Modules\Bank\Database\Enums\ServiceTypeEnum;
 use Modules\Core\App\Services\AuthService;
 use Modules\Core\App\Traits\ResponseTrait;
 
-class BankController extends Controller
+class
+BankController extends Controller
 {
     use ResponseTrait;
 
