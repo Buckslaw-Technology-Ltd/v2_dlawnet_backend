@@ -12,5 +12,6 @@ class BankDatabaseSeeder extends Seeder
     public function run(): void
     {
         // $this->call([]);
+        $this->call(TopupSeeder::class);
     }
 }

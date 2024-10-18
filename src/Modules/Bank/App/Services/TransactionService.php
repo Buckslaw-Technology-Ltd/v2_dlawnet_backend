@@ -84,4 +84,8 @@ class TransactionService
         }
         return false;
     }
+
+    public function transactionLogExists($transaction){
+
+    }
 }

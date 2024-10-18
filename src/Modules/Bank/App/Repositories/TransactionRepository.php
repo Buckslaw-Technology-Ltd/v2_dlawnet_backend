@@ -12,4 +12,5 @@ class TransactionRepository extends CoreRepository implements TransactionReposit
     {
         parent::__construct($model);
     }
+
 }

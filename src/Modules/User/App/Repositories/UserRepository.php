@@ -14,6 +14,15 @@ class UserRepository extends CoreRepository implements UserRepositoryInterface
         parent::__construct($model);
     }
 
+
+    /**
+     * @return \Illuminate\Contracts\Auth\Authenticatable|User|null
+     */
+    public function currentUser(): User|\Illuminate\Contracts\Auth\Authenticatable|null
+    {
+        return auth()->user();
+    }
+
     /**
      * Assign role to user
      */
